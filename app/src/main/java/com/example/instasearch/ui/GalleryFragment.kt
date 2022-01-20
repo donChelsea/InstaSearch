@@ -1,4 +1,7 @@
 package com.example.instasearch.ui
 
-class GalleryFragment {
+import androidx.fragment.app.Fragment
+import com.example.instasearch.R
+
+class GalleryFragment : Fragment(R.layout.fragment_gallery) {
 }
