@@ -6,7 +6,7 @@
     app:startDestination="@id/gallery_fragment">
     <fragment
         android:id="@+id/gallery_fragment"
-        android:name="com.example.instasearch.ui.GalleryFragment"
+        android:name="com.example.instasearch.ui.gallery.GalleryFragment"
         android:label="fragment_gallery"
         tools:layout="@layout/fragment_gallery" />
 </navigation>
