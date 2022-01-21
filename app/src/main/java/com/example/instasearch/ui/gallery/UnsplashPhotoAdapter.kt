@@ -1,5 +1,6 @@
 package com.example.instasearch.ui.gallery
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -11,11 +12,12 @@ import com.example.instasearch.R
 import com.example.instasearch.data.UnsplashPhoto
 import com.example.instasearch.databinding.ItemViewPhotoBinding
 
-class UnsplashPhotoAdapter :
+class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
     PagingDataAdapter<UnsplashPhoto, UnsplashPhotoAdapter.PhotoViewHolder>(PHOTO_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
-        val binding = ItemViewPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemViewPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PhotoViewHolder(binding)
     }
 
@@ -27,20 +29,37 @@ class UnsplashPhotoAdapter :
         }
     }
 
-    class PhotoViewHolder(private val binding: ItemViewPhotoBinding) :
+    inner class PhotoViewHolder(private val binding: ItemViewPhotoBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-            fun bind(photo: UnsplashPhoto) {
-                binding.apply {
-                    usernameTv.text = photo.user.username
-                    Glide.with(itemView)
-                        .load(photo.urls.regular)
-                        .centerCrop()
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .error(R.drawable.ic_error)
-                        .into(photoIv)
+        init {
+            binding.photoIv.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val item = getItem(position)
+                    if (item != null) {
+                        listener.onItemClick(item)
+                    }
                 }
             }
+        }
+
+        fun bind(photo: UnsplashPhoto) {
+            binding.apply {
+                Glide.with(itemView)
+                    .load(photo.urls.regular)
+                    .centerCrop()
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .error(R.drawable.ic_error)
+                    .into(photoIv)
+
+                usernameTv.text = photo.user.username
+            }
+        }
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(photo: UnsplashPhoto)
     }
 
     companion object {

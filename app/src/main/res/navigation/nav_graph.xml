@@ -8,5 +8,18 @@
         android:id="@+id/gallery_fragment"
         android:name="com.example.instasearch.ui.gallery.GalleryFragment"
         android:label="fragment_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_gallery" >
+        <action
+            android:id="@+id/action_gallery_fragment_to_detailsFragment"
+            app:destination="@id/details_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/details_fragment"
+        android:name="com.example.instasearch.ui.details.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" >
+        <argument
+            android:name="photo"
+            app:argType="com.example.instasearch.data.UnsplashPhoto" />
+    </fragment>
 </navigation>

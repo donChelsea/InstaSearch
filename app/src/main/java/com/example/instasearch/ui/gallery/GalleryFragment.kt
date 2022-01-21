@@ -9,14 +9,18 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.paging.LoadStateAdapter
 import com.example.instasearch.R
+import com.example.instasearch.data.UnsplashPhoto
 import com.example.instasearch.databinding.FragmentGalleryBinding
+import com.example.instasearch.ui.details.DetailsFragment
 import dagger.hilt.android.AndroidEntryPoint
 
+const val KEY_UNSPLASH_PHOTO = "unsplash_photo"
+
 @AndroidEntryPoint
-class GalleryFragment : Fragment(R.layout.fragment_gallery) {
+class GalleryFragment : Fragment(R.layout.fragment_gallery), UnsplashPhotoAdapter.OnItemClickListener {
 
     private val viewModel by viewModels<GalleryViewModel>()
 
@@ -27,7 +31,7 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
 
         binding = FragmentGalleryBinding.bind(view)
 
-        val adapter = UnsplashPhotoAdapter()
+        val adapter = UnsplashPhotoAdapter(this)
 
         binding.apply {
             galleryRecyclerview.setHasFixedSize(true)
@@ -64,6 +68,22 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
         }
 
         setHasOptionsMenu(true)
+    }
+
+    override fun onItemClick(photo: UnsplashPhoto) {
+        val detailsFragment = DetailsFragment()
+        val args = Bundle().apply {
+            putParcelable(KEY_UNSPLASH_PHOTO, photo)
+        }
+        detailsFragment.arguments = args
+
+        requireActivity().supportFragmentManager.beginTransaction()
+            .addToBackStack("details")
+            .replace(R.id.nav_host_fragment_main, detailsFragment)
+            .commit()
+
+//        val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(photo)
+//        findNavController().navigate(action)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
