@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.paging.LoadStateAdapter
 import com.example.instasearch.R
 import com.example.instasearch.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +26,10 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
 
         binding.apply {
             galleryRecyclerview.setHasFixedSize(true)
-            galleryRecyclerview.adapter = adapter
+            galleryRecyclerview.adapter = adapter.withLoadStateHeaderAndFooter(
+                header = PhotoLoadStateAdapter { adapter.retry() },
+                footer = PhotoLoadStateAdapter { adapter.retry() }
+            )
         }
 
         viewModel.photos.observe(viewLifecycleOwner) {
